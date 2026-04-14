@@ -1,7 +1,6 @@
 function fatorial(n) {
     if (n === 0 || n === 1) return 1;
-    let res = 1;
-    for (let i = 2; i <= n; i++) res *= i;
+    let res = 1; for (let i = 2; i <= n; i++) res *= i;
     return res;
 }
 
@@ -11,65 +10,82 @@ function poisson(k, lambda) {
 
 function calcular() {
     const mediaLiga = parseFloat(document.getElementById('mediaLiga').value) / 2;
-    const gpCasa = parseFloat(document.getElementById('gpCasa').value);
-    const gsCasa = parseFloat(document.getElementById('gsCasa').value);
-    const gpFora = parseFloat(document.getElementById('gpFora').value);
-    const gsFora = parseFloat(document.getElementById('gsFora').value);
+    const gpC = parseFloat(document.getElementById('gpCasa').value);
+    const gsC = parseFloat(document.getElementById('gsCasa').value);
+    const gpF = parseFloat(document.getElementById('gpFora').value);
+    const gsF = parseFloat(document.getElementById('gsFora').value);
 
-    if (isNaN(gpCasa) || isNaN(gsCasa) || isNaN(gpFora) || isNaN(gsFora)) {
-        alert("Preencha as médias dos últimos 5 jogos.");
-        return;
+    if (isNaN(gpC) || isNaN(gsC) || isNaN(gpF) || isNaN(gsF)) {
+        alert("Preencha as médias."); return;
     }
 
-    const lambdaCasa = (gpCasa * gsFora) / mediaLiga;
-    const lambdaFora = (gpFora * gsCasa) / mediaLiga;
+    const lambdaC = (gpC * gsF) / mediaLiga;
+    const lambdaF = (gpF * gsC) / mediaLiga;
 
-    // Probabilidade Ambos Marcam
-    const btts = (1 - poisson(0, lambdaCasa)) * (1 - poisson(0, lambdaFora)) * 100;
-
-    // Probabilidade Over 2.5
+    // 1. Probabilidades de Gols
+    const btts = (1 - poisson(0, lambdaC)) * (1 - poisson(0, lambdaF)) * 100;
     let under25 = 0;
     for (let i = 0; i <= 2; i++) {
         for (let j = 0; j <= 2; j++) {
-            if (i + j < 3) under25 += poisson(i, lambdaCasa) * poisson(j, lambdaFora);
+            if (i + j < 3) under25 += poisson(i, lambdaC) * poisson(j, lambdaF);
         }
     }
     const over25 = (1 - under25) * 100;
 
-    // --- LÓGICA DE DECISÃO SEM PREFERÊNCIA ---
-    let veredito = "";
-    let chance = 0;
-    let cor = "";
-
-    // 1. Identifica qual a maior probabilidade entre os dois
-    if (over25 >= btts) {
-        chance = over25;
-        veredito = "OVER 2.5 GOLS";
-        cor = "#00d4ff"; // Azul
-    } else {
-        chance = btts;
-        veredito = "AMBOS MARCAM";
-        cor = "#4ecca3"; // Verde
+    // 2. Probabilidades de Resultado (Vencedor)
+    let pVitCasa = 0, pEmpate = 0, pVitFora = 0;
+    for (let i = 0; i <= 6; i++) {
+        for (let j = 0; j <= 6; j++) {
+            let pPlacar = poisson(i, lambdaC) * poisson(j, lambdaF);
+            if (i > j) pVitCasa += pPlacar;
+            else if (i === j) pEmpate += pPlacar;
+            else pVitFora += pPlacar;
+        }
     }
+    pVitCasa *= 100; pEmpate *= 100; pVitFora *= 100;
 
-    // 2. FILTRO DE SEGURANÇA: Se a melhor chance for menor que 50%, anula a sugestão
-    if (chance < 50) {
-        veredito = "SEM TENDÊNCIA CLARA";
-        cor = "#ff4d4d"; // Vermelho (Alerta)
+    // --- LÓGICA DE DECISÃO ---
+    let veredito = "", chance = 0, cor = "#00d4ff";
+
+    // Tenta primeiro os mercados de Gols (Over ou Ambos)
+    if (over25 >= btts && over25 >= 50) {
+        veredito = "OVER 2.5 GOLS";
+        chance = over25;
+    } else if (btts >= 50) {
+        veredito = "AMBOS MARCAM";
+        chance = btts;
+        cor = "#4ecca3";
+    }
+    // Se gols forem arriscados (< 50%), busca Favorito ou Dupla Chance
+    else {
+        cor = "#ffcc00"; // Amarelo para sinal alternativo
+        if (pVitCasa >= 50) {
+            veredito = "VENCEDOR: CASA";
+            chance = pVitCasa;
+        } else if (pVitFora >= 50) {
+            veredito = "VENCEDOR: FORA";
+            chance = pVitFora;
+        } else if (pVitCasa + pEmpate >= 70) {
+            veredito = "DUPLA CHANCE: CASA OU EMPATE";
+            chance = pVitCasa + pEmpate;
+        } else if (pVitFora + pEmpate >= 70) {
+            veredito = "DUPLA CHANCE: FORA OU EMPATE";
+            chance = pVitFora + pEmpate;
+        } else {
+            veredito = "JOGO MUITO EQUILIBRADO";
+            chance = pEmpate;
+            cor = "#ff4d4d";
+        }
     }
 
     // Exibição
-    const output = document.getElementById('output');
-    output.style.display = "block";
-
+    document.getElementById('output').style.display = "block";
     const resVeredito = document.getElementById('resultadoVeredito');
     resVeredito.innerText = veredito;
     resVeredito.style.color = cor;
-
-    const resProb = document.getElementById('probabilidadeFinal');
-    resProb.innerText = chance.toFixed(2) + "%";
-    resProb.style.color = cor;
+    document.getElementById('probabilidadeFinal').innerText = chance.toFixed(2) + "%";
 }
+
 
 
 
