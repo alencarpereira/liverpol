@@ -1,0 +1,145 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #1a1a2e;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.card {
+    background: #16213e;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    width: 90%;
+    max-width: 400px;
+}
+
+h2 {
+    text-align: center;
+    color: #4ecca3;
+    margin-bottom: 25px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    flex: 1;
+}
+
+.row {
+    display: flex;
+    gap: 10px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.85em;
+    color: #adb5bd;
+}
+
+select,
+input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: #0f3460;
+    color: #fff;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    border-radius: 8px;
+    border: none;
+    background: #4ecca3;
+    color: #1a1a2e;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1em;
+    transition: 0.3s;
+    margin-top: 15px;
+}
+
+button:hover {
+    background: #45b291;
+    transform: translateY(-2px);
+}
+
+.results {
+    margin-top: 25px;
+    border-top: 1px solid #0f3460;
+    padding-top: 20px;
+}
+
+.res-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #0f3460;
+}
+
+.res-val {
+    font-weight: bold;
+    color: #4ecca3;
+    font-size: 1.1em;
+}
+
+/* Mantenha todo o seu código anterior e ajuste/adicione estes pontos: */
+
+.results {
+    margin-top: 25px;
+    border-top: 2px solid #0f3460;
+    padding-top: 20px;
+    text-align: center;
+    /* Centraliza o veredito */
+}
+
+/* Estilo para o nome do mercado (OVER ou AMBOS) */
+#resultadoVeredito {
+    display: block;
+    font-weight: 900;
+    font-size: 1.8em;
+    /* Aumenta o destaque da decisão */
+    margin: 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Estilo para a porcentagem de confiança */
+#probabilidadeFinal {
+    font-weight: bold;
+    font-size: 1em;
+    opacity: 0.8;
+}
+
+/* Estilo para o selo de "Sugestão Matemática" */
+#labelVeredito {
+    font-size: 0.75em;
+    color: #adb5bd;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Adicione um efeito suave de entrada quando o resultado aparecer */
+#output {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
