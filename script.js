@@ -36,19 +36,26 @@ function calcular() {
     }
     const over25 = (1 - under25) * 100;
 
-    // Decisão do Cérebro
+    // --- LÓGICA DE DECISÃO SEM PREFERÊNCIA ---
     let veredito = "";
     let chance = 0;
     let cor = "";
 
+    // 1. Identifica qual a maior probabilidade entre os dois
     if (over25 >= btts) {
-        veredito = "OVER 2.5 GOLS";
         chance = over25;
+        veredito = "OVER 2.5 GOLS";
         cor = "#00d4ff"; // Azul
     } else {
-        veredito = "AMBOS MARCAM";
         chance = btts;
+        veredito = "AMBOS MARCAM";
         cor = "#4ecca3"; // Verde
+    }
+
+    // 2. FILTRO DE SEGURANÇA: Se a melhor chance for menor que 50%, anula a sugestão
+    if (chance < 50) {
+        veredito = "SEM TENDÊNCIA CLARA";
+        cor = "#ff4d4d"; // Vermelho (Alerta)
     }
 
     // Exibição
@@ -63,6 +70,7 @@ function calcular() {
     resProb.innerText = chance.toFixed(2) + "%";
     resProb.style.color = cor;
 }
+
 
 
 
