@@ -82,9 +82,13 @@ function calcular() {
     // 3. EXIBIÇÃO
     document.getElementById('output').style.display = "block";
     const resV = document.getElementById('resultadoVeredito');
+    const resP = document.getElementById('probabilidadeFinal');
+
     resV.innerText = veredito;
     resV.style.color = cor;
-    document.getElementById('probabilidadeFinal').innerText = chance.toFixed(2) + "%";
+
+    resP.innerText = chance.toFixed(2) + "%";
+    resP.style.color = cor; // Garante que a % tenha a mesma cor do veredito
 }
 
 

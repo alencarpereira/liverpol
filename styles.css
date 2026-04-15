@@ -51,6 +51,7 @@ input {
     color: #fff;
     font-size: 1em;
     box-sizing: border-box;
+    outline: none;
 }
 
 button {
@@ -72,54 +73,15 @@ button:hover {
     transform: translateY(-2px);
 }
 
-.results {
-    margin-top: 25px;
-    border-top: 1px solid #0f3460;
-    padding-top: 20px;
-}
-
-.res-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid #0f3460;
-}
-
-.res-val {
-    font-weight: bold;
-    color: #4ecca3;
-    font-size: 1.1em;
-}
-
-/* Mantenha todo o seu código anterior e ajuste/adicione estes pontos: */
-
+/* Estilização da Área de Resultados */
 .results {
     margin-top: 25px;
     border-top: 2px solid #0f3460;
     padding-top: 20px;
     text-align: center;
-    /* Centraliza o veredito */
+    animation: fadeIn 0.5s ease-in;
 }
 
-/* Estilo para o nome do mercado (OVER ou AMBOS) */
-#resultadoVeredito {
-    display: block;
-    font-weight: 900;
-    font-size: 1.8em;
-    /* Aumenta o destaque da decisão */
-    margin: 10px 0;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* Estilo para a porcentagem de confiança */
-#probabilidadeFinal {
-    font-weight: bold;
-    font-size: 1em;
-    opacity: 0.8;
-}
-
-/* Estilo para o selo de "Sugestão Matemática" */
 #labelVeredito {
     font-size: 0.75em;
     color: #adb5bd;
@@ -127,11 +89,22 @@ button:hover {
     letter-spacing: 2px;
 }
 
-/* Adicione um efeito suave de entrada quando o resultado aparecer */
-#output {
-    animation: fadeIn 0.5s ease-in;
+#resultadoVeredito {
+    display: block;
+    font-weight: 900;
+    font-size: 1.8em;
+    margin: 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
+#probabilidadeFinal {
+    font-weight: bold;
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+
+/* Animação de Entrada */
 @keyframes fadeIn {
     from {
         opacity: 0;

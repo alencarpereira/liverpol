@@ -10,37 +10,33 @@
 
 <body>
 
+    <!-- Abertura do Card (Faltava isso) -->
     <div class="card">
         <h2>Estatística Pura</h2>
 
-        <!-- Seleção de Liga -->
         <div class="input-group">
             <label>Liga / Competição:</label>
             <select id="mediaLiga">
-                <!-- Elite Europeia & Conferência -->
                 <option value="3.17">UEFA Champions League (3.17)</option>
                 <option value="2.82">UEFA Conference League (2.82)</option>
                 <option value="3.24">Holandês - Eredivisie (3.24)</option>
                 <option value="3.14">Bundesliga (3.14)</option>
                 <option value="2.85">Premier League (2.85)</option>
-
-                <!-- América do Sul - Principais e Sula -->
                 <option value="2.60">Brasileirão Série A (2.60)</option>
                 <option value="2.47">Copa Sul-Americana (2.47)</option>
                 <option value="2.40">Copa Libertadores (2.40)</option>
                 <option value="2.22">Brasileirão Série B (2.22)</option>
-
-                <!-- Ligas Sul-Americanas Específicas -->
+                <option value="3.13">Arábia Saudita - Pro League (3.13)</option>
+                <option value="2.45">Inglaterra - Championship (2.45)</option>
+                <option value="2.60">Espanha - La Liga 2 (2.60)</option>
+                <option value="3.20">Holandês - Eerste Divisie (3.20)</option>
                 <option value="2.33">Campeonato Uruguaio (2.33)</option>
                 <option value="2.17">Campeonato Paraguaio (2.17)</option>
                 <option value="2.28">Campeonato Colombiano (2.28)</option>
-
-                <!-- Outras -->
                 <option value="2.50">Outras / Geral (2.50)</option>
             </select>
         </div>
 
-        <!-- Médias Mandante -->
         <div class="row">
             <div class="input-group">
                 <label>Gols Marcados Casa (L5):</label>
@@ -52,7 +48,6 @@
             </div>
         </div>
 
-        <!-- Médias Visitante -->
         <div class="row">
             <div class="input-group">
                 <label>Gols Marcados Fora (L5):</label>
@@ -66,7 +61,6 @@
 
         <button onclick="calcular()">CALCULAR PROBABILIDADE</button>
 
-        <!-- Resultado Único -->
         <div id="output" class="results" style="display:none; margin-top: 20px; text-align: center;">
             <span id="labelVeredito" style="font-size: 0.8em; color: #adb5bd; display: block;">SUGESTÃO
                 MATEMÁTICA:</span>
@@ -74,7 +68,7 @@
             <span id="probabilidadeFinal" style="font-size: 1.1em; font-weight: bold;">--</span>
         </div>
 
-    </div>
+    </div> <!-- Fechamento do Card -->
 
     <script src="script.js"></script>
 </body>
