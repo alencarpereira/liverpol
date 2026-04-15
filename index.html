@@ -13,6 +13,7 @@
     <div class="card">
         <h2>Estatística Pura</h2>
 
+        <!-- Seleção de Liga -->
         <div class="input-group">
             <label>Liga / Competição:</label>
             <select id="mediaLiga">
@@ -39,7 +40,7 @@
             </select>
         </div>
 
-
+        <!-- Médias Mandante -->
         <div class="row">
             <div class="input-group">
                 <label>Gols Marcados Casa (L5):</label>
@@ -51,6 +52,7 @@
             </div>
         </div>
 
+        <!-- Médias Visitante -->
         <div class="row">
             <div class="input-group">
                 <label>Gols Marcados Fora (L5):</label>
@@ -64,6 +66,7 @@
 
         <button onclick="calcular()">CALCULAR PROBABILIDADE</button>
 
+        <!-- Resultado Único -->
         <div id="output" class="results" style="display:none; margin-top: 20px; text-align: center;">
             <span id="labelVeredito" style="font-size: 0.8em; color: #adb5bd; display: block;">SUGESTÃO
                 MATEMÁTICA:</span>
