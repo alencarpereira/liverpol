@@ -9,28 +9,37 @@ function poisson(k, lambda) {
 }
 
 function calcular() {
-    const mediaLiga = parseFloat(document.getElementById('mediaLiga').value) / 2;
-    const gpA = parseFloat(document.getElementById('gpCasa').value);
-    const gsA = parseFloat(document.getElementById('gsCasa').value);
-    const gpB = parseFloat(document.getElementById('gpFora').value);
-    const gsB = parseFloat(document.getElementById('gsFora').value);
+    const lerInput = (id) => {
+        const val = document.getElementById(id).value.replace(',', '.');
+        return parseFloat(val);
+    };
+
+    // 1. Médias Básicas
+    const mediaLigaGeral = parseFloat(document.getElementById('mediaLiga').value);
+    const mediaPorTime = mediaLigaGeral / 2;
+
+    const gpA = lerInput('gpCasa'); // Gols Pró Mandante
+    const gsA = lerInput('gsCasa'); // Gols Sofridos Mandante
+    const gpB = lerInput('gpFora'); // Gols Pró Visitante
+    const gsB = lerInput('gsFora'); // Gols Sofridos Visitante
 
     if (isNaN(gpA) || isNaN(gsA) || isNaN(gpB) || isNaN(gsB)) {
-        alert("Preencha as médias."); return;
+        alert("Preencha todas as médias corretamente."); return;
     }
 
-    const lambdaA = (gpA * gsB) / mediaLiga;
-    const lambdaB = (gpB * gsA) / mediaLiga;
+    // 2. APLICAÇÃO DO PESO DE MANDO DE CAMPO (Fator 1.10 Casa e 0.90 Visitante)
+    const lambdaA = (gpA * gsB / mediaPorTime) * 1.10;
+    const lambdaB = (gpB * gsA / mediaPorTime) * 0.90;
 
     // --- CÁLCULO DE PROBABILIDADES DE GOLS ---
     const btts = (1 - poisson(0, lambdaA)) * (1 - poisson(0, lambdaB)) * 100;
 
-    let probGols = {};
+    let probGols = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
     for (let i = 0; i <= 6; i++) {
         for (let j = 0; j <= 6; j++) {
             let p = poisson(i, lambdaA) * poisson(j, lambdaB);
             let total = i + j;
-            probGols[total] = (probGols[total] || 0) + p;
+            if (total <= 6) probGols[total] += p;
         }
     }
 
@@ -38,7 +47,7 @@ function calcular() {
     const over25 = (over15 - (probGols[2] * 100));
     const under35 = (probGols[0] + probGols[1] + probGols[2] + probGols[3]) * 100;
 
-    // --- CÁLCULO DE RESULTADO (A, B, Empate) ---
+    // --- CÁLCULO DE RESULTADO (1, X, 2) ---
     let pVitA = 0, pEmpate = 0, pVitB = 0;
     for (let i = 0; i <= 6; i++) {
         for (let j = 0; j <= 6; j++) {
@@ -50,45 +59,43 @@ function calcular() {
     }
     pVitA *= 100; pEmpate *= 100; pVitB *= 100;
 
-    // --- LÓGICA DE DECISÃO ---
+    // --- LÓGICA DE DECISÃO REFINADA (Sarrafo de 60%) ---
     let veredito = "", chance = 0, cor = "";
 
-    // 1. PRIORIDADE: OVER 2.5 OU AMBOS MARCAM (Mínimo 50%)
-    if (over25 >= 50 || btts >= 50) {
+    // Prioridade 1: Over 2.5 ou BTTS (Agressivo)
+    if (over25 >= 60 || btts >= 60) {
         if (over25 >= btts) {
             veredito = "OVER 2.5 GOLS";
             chance = over25;
-            cor = "#00d4ff"; // Azul
+            cor = "#00d4ff";
         } else {
             veredito = "AMBOS MARCAM";
             chance = btts;
-            cor = "#4ecca3"; // Verde
+            cor = "#4ecca3";
         }
     }
-    // 2. SE NÃO, APLICA O COMBO ESTRATÉGICO (DC + O1.5/U3.5)
+    // Prioridade 2: Combo Dupla Chance + Gols mais provável (Conservador)
     else {
-        cor = "#ffcc00"; // Amarelo
-        let dcTipo = (pVitA + pEmpate >= pVitB + pEmpate) ? "A OU EMPATE" : "B OU EMPATE";
-        let dcProb = (dcTipo === "A OU EMPATE") ? (pVitA + pEmpate) : (pVitB + pEmpate);
+        cor = "#ffcc00";
+        let dcTipo = (pVitA + pEmpate >= pVitB + pEmpate) ? "1X" : "X2";
+        let dcProb = (dcTipo === "1X") ? (pVitA + pEmpate) : (pVitB + pEmpate);
 
-        // Lógica de Diferença (Se Diferença >= 0.50 vai de Under 3.5, senão Over 1.5)
-        let difGols = (under35 - over15) / 100;
-        let comboGols = difGols >= 0.50 ? "UNDER 3.5" : "OVER 1.5";
+        let mercadoGols = (under35 >= over15) ? "UNDER 3.5" : "OVER 1.5";
+        let probGolsFinal = (mercadoGols === "UNDER 3.5") ? under35 : over15;
 
-        veredito = `${dcTipo} + ${comboGols}`;
-        chance = dcProb;
+        veredito = `${dcTipo} & ${mercadoGols}`;
+        chance = (dcProb + probGolsFinal) / 2;
     }
 
-    // 3. EXIBIÇÃO
+    // --- EXIBIÇÃO ---
     document.getElementById('output').style.display = "block";
     const resV = document.getElementById('resultadoVeredito');
     const resP = document.getElementById('probabilidadeFinal');
 
     resV.innerText = veredito;
     resV.style.color = cor;
-
     resP.innerText = chance.toFixed(2) + "%";
-    resP.style.color = cor; // Garante que a % tenha a mesma cor do veredito
+    resP.style.color = cor;
 }
 
 
