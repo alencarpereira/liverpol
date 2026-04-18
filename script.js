@@ -98,6 +98,17 @@ function calcular() {
     resP.style.color = cor;
 }
 
+function limparCampos() {
+    // Limpa todos os inputs de número
+    document.querySelectorAll('input[type="number"]').forEach(input => input.value = '');
+
+    // Reseta o select para a primeira opção (ou a padrão)
+    document.getElementById('mediaLiga').selectedIndex = 0;
+
+    // Esconde a área de resultados
+    document.getElementById('output').style.display = 'none';
+}
+
 
 
 

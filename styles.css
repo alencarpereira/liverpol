@@ -101,6 +101,14 @@ button:active {
     transform: scale(0.98);
 }
 
+button[onclick="limparCampos()"]:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: #4ecca3 !important;
+    color: #4ecca3 !important;
+    transform: none !important;
+}
+
+
 /* Área de Resultados */
 .results {
     margin-top: 30px;
