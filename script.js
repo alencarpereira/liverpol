@@ -44,7 +44,7 @@ function calcular() {
     }
 
     const over15 = (1 - (probGols[0] + probGols[1])) * 100;
-    const over25 = (over15 - (probGols[2] * 100));
+    const over25 = (1 - (probGols[0] + probGols[1] + probGols[2])) * 100;
     const under35 = (probGols[0] + probGols[1] + probGols[2] + probGols[3]) * 100;
 
     // --- CÁLCULO DE RESULTADO (1, X, 2) ---
@@ -63,26 +63,41 @@ function calcular() {
     let veredito = "", chance = 0, cor = "";
 
     // Prioridade 1: Over 2.5 ou BTTS (Agressivo)
-    if (over25 >= 60 || btts >= 60) {
-        if (over25 >= btts) {
-            veredito = "OVER 2.5 GOLS";
-            chance = over25;
-            cor = "#00d4ff";
-        } else {
+    if (over25 >= 60 || btts >= 55) {
+        // Se o BTTS for muito provável e o Over também, 
+        // mas a probabilidade de um time golear sozinha for baixa, BTTS é mais seguro.
+        if (btts >= 55 && btts > (over25 - 5)) {
             veredito = "AMBOS MARCAM";
             chance = btts;
             cor = "#4ecca3";
+        } else {
+            veredito = "OVER 2.5 GOLS";
+            chance = over25;
+            cor = "#00d4ff";
         }
     }
+
     // Prioridade 2: Combo Dupla Chance + Gols mais provável (Conservador)
     else {
         cor = "#ffcc00";
+
+        // 1. Dupla Chance: Escolhe o lado com maior probabilidade de não perder
         let dcTipo = (pVitA + pEmpate >= pVitB + pEmpate) ? "1X" : "X2";
         let dcProb = (dcTipo === "1X") ? (pVitA + pEmpate) : (pVitB + pEmpate);
 
-        let mercadoGols = (under35 >= over15) ? "UNDER 3.5" : "OVER 1.5";
-        let probGolsFinal = (mercadoGols === "UNDER 3.5") ? under35 : over15;
+        // 2. Lógica de Gols: Prioridade para Over 1.5 com sarrafo de 65%
+        let mercadoGols = "";
+        let probGolsFinal = 0;
 
+        if (over15 >= 65) {
+            mercadoGols = "OVER 1.5";
+            probGolsFinal = over15;
+        } else {
+            mercadoGols = "UNDER 3.5";
+            probGolsFinal = under35;
+        }
+
+        // 3. Veredito final do Combo
         veredito = `${dcTipo} & ${mercadoGols}`;
         chance = (dcProb + probGolsFinal) / 2;
     }
